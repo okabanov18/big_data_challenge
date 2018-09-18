@@ -19,8 +19,6 @@ object App {
   implicit val formats = DefaultFormats
   
   def main(args : Array[String]) {
-    println( "Hello World!" )
-
     val sparkConf = new SparkConf()
     val batchDuration = Seconds(sparkConf.get("spark.log-parser.batch-duration", "5").toInt)
     val kafkaInputTopic = sparkConf.get("spark.log-parser.kafka.input-topic", "iot-device-log")
@@ -41,7 +39,10 @@ object App {
         parse(value).extract[Array[InputLog]].map(_.data)
       }.foreachRDD { rdd =>
         rdd.foreachPartition { partition =>
-          partition.foreach { HBaseUploader.save }
+          val iotDeviceDao = new IotDeviceDao()
+          iotDeviceDao.init()
+          partition.foreach { iotDeviceDao.save }
+          iotDeviceDao.close()
         }
     }
 
