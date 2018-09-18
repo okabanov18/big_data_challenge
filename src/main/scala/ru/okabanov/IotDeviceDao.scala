@@ -1,11 +1,18 @@
 package ru.okabanov
 
+import java.sql.Timestamp
+import java.text.{DateFormat, SimpleDateFormat}
+
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hbase.client.{HBaseAdmin, HTable, Put}
 import org.apache.hadoop.hbase.util.Bytes
 import org.apache.hadoop.hbase.{HBaseConfiguration, HColumnDescriptor, HTableDescriptor}
 
 class IotDeviceDao {
+
+  val formatTime = new ThreadLocal[DateFormat] () {
+    override def initialValue(): DateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+  }
 
   private val cfDevice = Bytes.toBytes("device")
   private val cfMetric = Bytes.toBytes("metric")
@@ -16,12 +23,14 @@ class IotDeviceDao {
   private var hTable: HTable = _
 
   def save(data: DeviceLogData) {
+    val transformedTime = formatTime.get().format(new Timestamp(data.time))
+
     val put = new Put(Bytes.toBytes(System.currentTimeMillis()))
     put.add(cfDevice, Bytes.toBytes("id"), Bytes.toBytes(data.deviceId))
     put.add(cfMetric, Bytes.toBytes("temperature"), Bytes.toBytes(data.temperature))
     put.add(cfLocation, Bytes.toBytes("latitude"), Bytes.toBytes(data.location.latitude))
     put.add(cfLocation, Bytes.toBytes("longitude"), Bytes.toBytes(data.location.longitude))
-    put.add(cfTime, Bytes.toBytes("time"), Bytes.toBytes(data.time))
+    put.add(cfTime, Bytes.toBytes("time"), Bytes.toBytes(transformedTime))
 
     hTable.put(put)
   }
