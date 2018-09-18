@@ -25,11 +25,11 @@ class IotDeviceDao {
   def save(data: DeviceLogData) {
     val transformedTime = formatTime.get().format(new Timestamp(data.time))
 
-    val put = new Put(Bytes.toBytes(System.currentTimeMillis()))
-    put.add(cfDevice, Bytes.toBytes("id"), Bytes.toBytes(data.deviceId))
-    put.add(cfMetric, Bytes.toBytes("temperature"), Bytes.toBytes(data.temperature))
-    put.add(cfLocation, Bytes.toBytes("latitude"), Bytes.toBytes(data.location.latitude))
-    put.add(cfLocation, Bytes.toBytes("longitude"), Bytes.toBytes(data.location.longitude))
+    val put = new Put(Bytes.toBytes("key" + System.currentTimeMillis()))
+    put.add(cfDevice, Bytes.toBytes("id"), Bytes.toBytes(data.deviceId.toString))
+    put.add(cfMetric, Bytes.toBytes("temperature"), Bytes.toBytes(data.temperature.toString))
+    put.add(cfLocation, Bytes.toBytes("latitude"), Bytes.toBytes(data.location.latitude.toString))
+    put.add(cfLocation, Bytes.toBytes("longitude"), Bytes.toBytes(data.location.longitude.toString))
     put.add(cfTime, Bytes.toBytes("time"), Bytes.toBytes(transformedTime))
 
     hTable.put(put)

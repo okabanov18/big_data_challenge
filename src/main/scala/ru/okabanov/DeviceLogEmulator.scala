@@ -1,12 +1,10 @@
 package ru.okabanov
 
-import java.sql.Timestamp
 import java.util.concurrent.{Executors, TimeUnit}
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
-import org.json4s.jackson.JsonMethods
 
 object DeviceLogEmulator {
   lazy val random = scala.util.Random

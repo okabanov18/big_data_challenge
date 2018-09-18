@@ -1,11 +1,11 @@
 package ru.okabanov
 
-import kafka.serializer.{DefaultDecoder, StringDecoder}
+import kafka.serializer.StringDecoder
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.streaming.kafka.KafkaUtils
 import org.json4s.DefaultFormats
-import org.json4s.jackson.{JsonMethods, Serialization}
+import org.json4s.jackson.JsonMethods
 
 import scala.util.{Failure, Success, Try}
 
