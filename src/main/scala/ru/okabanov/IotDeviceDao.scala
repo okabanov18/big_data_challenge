@@ -10,13 +10,13 @@ import org.apache.hadoop.hbase.{HBaseConfiguration, HColumnDescriptor, HTableDes
 
 class IotDeviceDao {
 
-  val formatTime = new ThreadLocal[DateFormat] () {
+  val formatTime = new ThreadLocal[DateFormat]() {
     override def initialValue(): DateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
   }
 
   private val cfDevice = Bytes.toBytes("device")
   private val cfMetric = Bytes.toBytes("metric")
-  private val cfTime   = Bytes.toBytes("time")
+  private val cfTime = Bytes.toBytes("time")
   private val cfLocation = Bytes.toBytes("location")
 
   private var hbaseConf: Configuration = _
@@ -39,10 +39,10 @@ class IotDeviceDao {
     hbaseConf = HBaseConfiguration.create()
     val tableName = "iot_device_log"
     hbaseConf.set("hbase.mapred.outputtable", tableName)
-    hbaseConf.set("hbase.zookeeper.quorum","quickstart.cloudera")
-    hbaseConf.set("hbase.zookeeper.property.client.port","2181")
+    hbaseConf.set("hbase.zookeeper.quorum", "quickstart.cloudera")
+    hbaseConf.set("hbase.zookeeper.property.client.port", "2181")
     val admin = new HBaseAdmin(hbaseConf)
-    hTable = new HTable(hbaseConf,tableName)
+    hTable = new HTable(hbaseConf, tableName)
     createIfNotExist(tableName, admin)
   }
 

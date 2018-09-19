@@ -2,23 +2,22 @@ package ru.okabanov
 
 import kafka.serializer.StringDecoder
 import org.apache.spark.SparkConf
-import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.streaming.kafka.KafkaUtils
+import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods
+import org.json4s.jackson.JsonMethods._
 
 import scala.util.{Failure, Success, Try}
 
-import org.json4s.jackson.JsonMethods._
-
 /**
- * @author ${user.name}
- */
+  * @author ${user.name}
+  */
 object App {
 
   implicit val formats = DefaultFormats
-  
-  def main(args : Array[String]) {
+
+  def main(args: Array[String]) {
     val sparkConf = new SparkConf()
     val batchDuration = Seconds(sparkConf.get("spark.log-parser.batch-duration", "5").toInt)
     val kafkaInputTopic = sparkConf.get("spark.log-parser.kafka.input-topic", "iot-device-log")
@@ -34,16 +33,18 @@ object App {
     val inputStream = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, Set(kafkaInputTopic))
 
     inputStream
-      .flatMap { case(id, value) =>
+      .flatMap { case (id, value) =>
         implicit val formats = DefaultFormats
         parse(value).extract[Array[InputLog]].map(_.data)
       }.foreachRDD { rdd =>
-        rdd.foreachPartition { partition =>
-          val iotDeviceDao = new IotDeviceDao()
-          iotDeviceDao.init()
-          partition.foreach { iotDeviceDao.save }
-          iotDeviceDao.close()
+      rdd.foreachPartition { partition =>
+        val iotDeviceDao = new IotDeviceDao()
+        iotDeviceDao.init()
+        partition.foreach {
+          iotDeviceDao.save
         }
+        iotDeviceDao.close()
+      }
     }
 
     ssc.start()
