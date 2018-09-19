@@ -29,9 +29,9 @@ class IotDeviceDao {
   private var hTable: HTable = _
 
   def save(data: DeviceLogData) {
-    val transformedTime = formatTime.get().format(new Timestamp(data.time))
+    val transformedTime = formatTime.get().format(new Timestamp(data.time * 1000))
 
-    val put = new Put(Bytes.toBytes(s"key_${data.deviceId.toString}_${System.currentTimeMillis()}"))
+    val put = new Put(Bytes.toBytes(s"${data.deviceId.toString}_${System.currentTimeMillis()}"))
     put.add(cfDevice, colId, Bytes.toBytes(data.deviceId.toString))
     put.add(cfMetric, colTemperature, Bytes.toBytes(data.temperature.toString))
     put.add(cfLocation, Bytes.toBytes("latitude"), Bytes.toBytes(data.location.latitude.toString))

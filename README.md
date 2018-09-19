@@ -10,15 +10,23 @@ TBLPROPERTIES("hbase.table.name" = "iot_device_log");
 
 invalidate metadata iot_device_log;
 
+## HBase
+Table: iot_device_log
+Key: deviceId + timestamp
+
+device | metric | location | time
+------ | ------ | -------- | ----
+id | temperature | latitude, longitude | time
+
 ## impala
-select deviceid, max(temperature)
+```select deviceid, max(temperature)
     from iot_device_log
-    group by deviceid;
+    group by deviceid;```
 
-select deviceid, count(*)
+```select deviceid, count(*)
     from iot_device_log
-    group by deviceid;
+    group by deviceid;```
 
-select max(temperature)
+```select max(temperature)
     from iot_device_log
-    where day = '';
+    where day = '';```
