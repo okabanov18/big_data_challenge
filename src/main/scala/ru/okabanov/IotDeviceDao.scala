@@ -19,15 +19,21 @@ class IotDeviceDao {
   private val cfTime = Bytes.toBytes("time")
   private val cfLocation = Bytes.toBytes("location")
 
+  private val colId = Bytes.toBytes("id")
+  private val colTemperature = Bytes.toBytes("temperature")
+  private val colLatitude = Bytes.toBytes("latitude")
+  private val colLongitude = Bytes.toBytes("longitude")
+  private val colTime = Bytes.toBytes("time")
+
   private var hbaseConf: Configuration = _
   private var hTable: HTable = _
 
   def save(data: DeviceLogData) {
     val transformedTime = formatTime.get().format(new Timestamp(data.time))
 
-    val put = new Put(Bytes.toBytes("key" + System.currentTimeMillis()))
-    put.add(cfDevice, Bytes.toBytes("id"), Bytes.toBytes(data.deviceId.toString))
-    put.add(cfMetric, Bytes.toBytes("temperature"), Bytes.toBytes(data.temperature.toString))
+    val put = new Put(Bytes.toBytes(s"key_${data.deviceId.toString}_${System.currentTimeMillis()}"))
+    put.add(cfDevice, colId, Bytes.toBytes(data.deviceId.toString))
+    put.add(cfMetric, colTemperature, Bytes.toBytes(data.temperature.toString))
     put.add(cfLocation, Bytes.toBytes("latitude"), Bytes.toBytes(data.location.latitude.toString))
     put.add(cfLocation, Bytes.toBytes("longitude"), Bytes.toBytes(data.location.longitude.toString))
     put.add(cfTime, Bytes.toBytes("time"), Bytes.toBytes(transformedTime))
