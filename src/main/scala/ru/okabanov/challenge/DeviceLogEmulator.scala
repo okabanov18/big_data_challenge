@@ -1,5 +1,7 @@
 package ru.okabanov.challenge
 
+import java.io.FileInputStream
+import java.util.Properties
 import java.util.concurrent.{Executors, TimeUnit}
 
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -14,8 +16,19 @@ object DeviceLogEmulator {
 
   def main(args: Array[String]): Unit = {
 
-    val brokers = "quickstart.cloudera:9092"
-    val topic = "iot-device-log"
+    val (brokers, topic) =
+      try {
+        val prop = new Properties()
+        prop.load(new FileInputStream("spark_application.conf"))
+        (
+          prop.getProperty("spark.iot-log-parser.kafka.brokers"),
+          prop.getProperty("spark.iot-log-parser.kafka.input-topic")
+        )
+      } catch { case e: Exception =>
+        e.printStackTrace()
+        sys.exit(1)
+      }
+
     val producer = new LogKafkaProducer(brokers)
 
     val sheduler = Executors.newScheduledThreadPool(2)
