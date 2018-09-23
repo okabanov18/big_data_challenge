@@ -1,4 +1,4 @@
-package ru.okabanov
+package ru.okabanov.challenge
 
 import java.util.concurrent.{Executors, TimeUnit}
 
@@ -7,7 +7,10 @@ import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 
 object DeviceLogEmulator {
-  lazy val random = scala.util.Random
+  lazy private val random = scala.util.Random
+
+  val mapper = new ObjectMapper() with ScalaObjectMapper
+  mapper.registerModule(DefaultScalaModule)
 
   def main(args: Array[String]): Unit = {
 
@@ -25,7 +28,7 @@ object DeviceLogEmulator {
           InputLog(buildEmulatedLog(baseUid + "3"))
         )
         println("Try to send")
-        val data = Serializer.write(inputs)
+        val data = mapper.writeValueAsString(inputs)
         producer.send(data, topic)
         println("Sent")
       }
@@ -44,11 +47,4 @@ object DeviceLogEmulator {
       time = System.currentTimeMillis() / 1000
     )
   }
-}
-
-object Serializer {
-  val mapper = new ObjectMapper() with ScalaObjectMapper
-  mapper.registerModule(DefaultScalaModule)
-
-  def write(data: AnyRef) = mapper.writeValueAsString(data)
 }

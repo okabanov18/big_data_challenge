@@ -1,4 +1,4 @@
-package ru.okabanov
+package ru.okabanov.challenge
 
 import kafka.serializer.StringDecoder
 import org.apache.spark.SparkConf
@@ -19,13 +19,10 @@ object App {
 
   def main(args: Array[String]) {
     val sparkConf = new SparkConf()
-    val batchDuration = Seconds(sparkConf.get("spark.log-parser.batch-duration", "5").toInt)
-    val kafkaInputTopic = sparkConf.get("spark.log-parser.kafka.input-topic", "iot-device-log")
-    val kafkaBrokers = sparkConf.get("spark.log-parser.kafka.brokers", "quickstart.cloudera:9092")
-    val kafkaGroupId = sparkConf.get("spark.log-parser.kafka.group", "iot-device-group")
-    val windowDuration = sparkConf.getInt("spark.log-parser.window.duration.seconds", 60)
-
-    lazy val logKafkaProducer = new LogKafkaProducer(kafkaBrokers)
+    val batchDuration = Seconds(sparkConf.get("spark.iot-log-parser.batch-duration", "5").toInt)
+    val kafkaInputTopic = sparkConf.get("spark.iot-log-parser.kafka.input-topic", "iot-device-log")
+    val kafkaBrokers = sparkConf.get("spark.iot-log-parser.kafka.brokers")
+    val kafkaGroupId = sparkConf.get("spark.iot-log-parser.kafka.group")
 
     val ssc = new StreamingContext(sparkConf, batchDuration)
     val kafkaParams = createKafkaParams(kafkaBrokers, kafkaGroupId)

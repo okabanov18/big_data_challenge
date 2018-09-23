@@ -1,4 +1,4 @@
-package ru.okabanov
+package ru.okabanov.challenge
 
 import java.sql.Timestamp
 import java.text.{DateFormat, SimpleDateFormat}

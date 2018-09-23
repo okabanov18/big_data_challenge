@@ -1,4 +1,4 @@
-package ru.okabanov
+package ru.okabanov.challenge
 
 case class DeviceLogData(
                           deviceId: String,
