@@ -35,15 +35,14 @@ object DeviceLogEmulator {
     sheduler.scheduleWithFixedDelay(new Runnable {
       override def run(): Unit = {
         val baseUid = "11c1310e-c0c2-461b-a4eb-f6bf8da2d23c-"
-        val inputs = Seq(
+        Seq(
           InputLog(buildEmulatedLog(baseUid + "1")),
           InputLog(buildEmulatedLog(baseUid + "2")),
           InputLog(buildEmulatedLog(baseUid + "3"))
-        )
-        println("Try to send")
-        val data = mapper.writeValueAsString(inputs)
-        producer.send(data, topic)
-        println("Sent")
+        ).foreach { logRow =>
+          val data = mapper.writeValueAsString(Seq(logRow))
+          producer.send(data, topic)
+        }
       }
     }, 0, 1, TimeUnit.SECONDS)
 
