@@ -4,14 +4,6 @@
 kafka-topics --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic iot-device-log
 ```
 
-## Hive
-```
-CREATE EXTERNAL TABLE iot_device_log (id BIGINT, device_id STRING, temperature INT, latitude FLOAT, longitude FLOAT, time STRING)
-STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
-WITH SERDEPROPERTIES ("hbase.columns.mapping" = ":key,device:id,metric:temperature,location:latitude,location:longitude,time:time")
-TBLPROPERTIES("hbase.table.name" = "iot_device_log");
-```
-
 ## HBase
 Table: iot_device_log
 
@@ -22,6 +14,14 @@ device | metric | location | time
 id | temperature | latitude, longitude | time
 
 ![Table view](https://github.com/okabanov18/big_data_challenge/blob/master/images/HBase_table.png?raw=true)
+
+## Hive
+```
+CREATE EXTERNAL TABLE iot_device_log (id BIGINT, device_id STRING, temperature INT, latitude FLOAT, longitude FLOAT, time STRING)
+STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+WITH SERDEPROPERTIES ("hbase.columns.mapping" = ":key,device:id,metric:temperature,location:latitude,location:longitude,time:time")
+TBLPROPERTIES("hbase.table.name" = "iot_device_log");
+```
 
 ## Impala
 ```
