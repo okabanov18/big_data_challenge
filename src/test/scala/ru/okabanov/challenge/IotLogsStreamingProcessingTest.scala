@@ -18,9 +18,6 @@ class IotLogsStreamingProcessingTest extends FlatSpec {
 
   val ssc = new StreamingContext(sparkConf, Seconds(1))
 
-  val mapper = new ObjectMapper() with ScalaObjectMapper
-  mapper.registerModule(DefaultScalaModule)
-
   behavior of "Log stream processing"
 
   it should "parse input stream" in {
