@@ -21,6 +21,8 @@ device | metric | location | time
 ------ | ------ | -------- | ----
 id | temperature | latitude, longitude | time
 
+![Table view](https://github.com/okabanov18/big_data_challenge/blob/master/images/HBase_table.png?raw=true)
+
 ## Impala
 ```
 invalidate metadata iot_device_log;
