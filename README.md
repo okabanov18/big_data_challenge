@@ -30,7 +30,7 @@ select device_id, max(temperature)
     from iot_device_log
     group by device_id;
 ```
-![Max temperature](https://github.com/okabanov18/big_data_challenge/blob/master/images/temperature_by_deviceId.png.png?raw=true)
+![Max temperature](https://github.com/okabanov18/big_data_challenge/blob/master/images/temperature_by_deviceId.png?raw=true)
 ```sql
 select device_id, count(*)
     from iot_device_log
