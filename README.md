@@ -31,12 +31,14 @@ select device_id, max(temperature)
     group by device_id;
 ```
 ![Max temperature](https://github.com/okabanov18/big_data_challenge/blob/master/images/temperature_by_deviceId.png?raw=true)
+===
 ```sql
 select device_id, count(*)
     from iot_device_log
     group by device_id;
 ```
 ![Count rows by device](https://github.com/okabanov18/big_data_challenge/blob/master/images/count_by_deviceId.png?raw=true)
+===
 ```sql
 select device_id, max(temperature)
     from iot_device_log
@@ -44,3 +46,4 @@ select device_id, max(temperature)
     group by device_id;
 ```
 ![Max temperature with filter](https://github.com/okabanov18/big_data_challenge/blob/master/images/temperature_by_deviceId_filtered.png?raw=true)
+===
