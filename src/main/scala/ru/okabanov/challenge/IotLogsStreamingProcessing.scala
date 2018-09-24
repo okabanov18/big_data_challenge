@@ -46,7 +46,7 @@ object IotLogsStreamingProcessing {
         rdd.foreachPartition { partition =>
           val iotDeviceDao = getIotDeviceDao
           iotDeviceDao.init()
-          partition.foreach{a => iotDeviceDao.save(a.copy(deviceId = "123123")) }
+          partition.foreach(iotDeviceDao.save)
           iotDeviceDao.close()
         }
       }
