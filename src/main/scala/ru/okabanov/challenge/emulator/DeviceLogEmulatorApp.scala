@@ -8,11 +8,12 @@ import ru.okabanov.challenge.LogKafkaProducer
   * @author okabanov
   */
 object DeviceLogEmulator {
+  private val DEVICES_COUNT = 3
 
   def main(args: Array[String]): Unit = {
     val (brokers, topic) = readKafkaProps()
     val producer = new LogKafkaProducer(brokers)
-    (1 to 3).foreach { i =>
+    (1 to DEVICES_COUNT).foreach { i =>
       new DeviceEmulator(s"device-$i", producer, topic).start()
     }
   }
