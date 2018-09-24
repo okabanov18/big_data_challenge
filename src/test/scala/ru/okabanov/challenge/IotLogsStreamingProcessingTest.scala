@@ -36,11 +36,11 @@ class IotLogsStreamingProcessingTest extends FlatSpec {
       time = 123456789
     )
 
-    ssc.start()
+    // ssc.start()
 
-    rddQueue += ssc.sparkContext.parallelize(List(
-      ("key", mapper.writeValueAsString(Seq(InputLog(deviceLogData))))
-    ))
+//    rddQueue += ssc.sparkContext.parallelize(List(
+//      ("key", mapper.writeValueAsString(Seq(InputLog(deviceLogData))))
+//    ))
 
 
   }

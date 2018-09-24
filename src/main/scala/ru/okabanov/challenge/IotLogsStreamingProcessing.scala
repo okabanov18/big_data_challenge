@@ -18,7 +18,7 @@ import scala.util.{Failure, Success, Try}
 object IotLogsStreamingProcessing {
   implicit val formats = DefaultFormats
 
-  def run() {
+  def main(args: Array[String]): Unit = {
     val sparkConf = new SparkConf()
     val batchDuration = Seconds(sparkConf.get("spark.iot-log-parser.batch-duration", "5").toInt)
     val kafkaInputTopic = sparkConf.get("spark.iot-log-parser.kafka.input-topic", "iot-device-log")
