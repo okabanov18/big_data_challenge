@@ -1,4 +1,4 @@
-package ru.okabanov.challenge
+package ru.okabanov.challenge.dao
 
 import java.sql.Timestamp
 import java.text.{DateFormat, SimpleDateFormat}
@@ -7,23 +7,27 @@ import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hbase.client.{HBaseAdmin, HTable, Put}
 import org.apache.hadoop.hbase.util.Bytes
 import org.apache.hadoop.hbase.{HBaseConfiguration, HColumnDescriptor, HTableDescriptor}
+import ru.okabanov.challenge.DeviceLogData
 
-class IotDeviceDao {
+/**
+  * @author okabanov
+  */
+class IotDeviceDaoImpl extends IotDeviceDao {
 
   val formatTime = new ThreadLocal[DateFormat]() {
     override def initialValue(): DateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
   }
 
-  private val cfDevice = Bytes.toBytes("device")
-  private val cfMetric = Bytes.toBytes("metric")
-  private val cfTime = Bytes.toBytes("time")
+  private val cfDevice   = Bytes.toBytes("device")
+  private val cfMetric   = Bytes.toBytes("metric")
+  private val cfTime     = Bytes.toBytes("time")
   private val cfLocation = Bytes.toBytes("location")
 
-  private val colId = Bytes.toBytes("id")
+  private val colId          = Bytes.toBytes("id")
   private val colTemperature = Bytes.toBytes("temperature")
-  private val colLatitude = Bytes.toBytes("latitude")
-  private val colLongitude = Bytes.toBytes("longitude")
-  private val colTime = Bytes.toBytes("time")
+  private val colLatitude    = Bytes.toBytes("latitude")
+  private val colLongitude   = Bytes.toBytes("longitude")
+  private val colTime        = Bytes.toBytes("time")
 
   private var hbaseConf: Configuration = _
   private var hTable: HTable = _
@@ -32,16 +36,16 @@ class IotDeviceDao {
     val transformedTime = formatTime.get().format(new Timestamp(data.time * 1000))
 
     val put = new Put(Bytes.toBytes(s"${data.deviceId.toString}_${System.currentTimeMillis()}"))
-    put.add(cfDevice, colId, Bytes.toBytes(data.deviceId.toString))
-    put.add(cfMetric, colTemperature, Bytes.toBytes(data.temperature.toString))
-    put.add(cfLocation, Bytes.toBytes("latitude"), Bytes.toBytes(data.location.latitude.toString))
-    put.add(cfLocation, Bytes.toBytes("longitude"), Bytes.toBytes(data.location.longitude.toString))
-    put.add(cfTime, Bytes.toBytes("time"), Bytes.toBytes(transformedTime))
+    put.add(cfDevice,   colId,          Bytes.toBytes(data.deviceId.toString))
+    put.add(cfMetric,   colTemperature, Bytes.toBytes(data.temperature.toString))
+    put.add(cfLocation, colLatitude,    Bytes.toBytes(data.location.latitude.toString))
+    put.add(cfLocation, colLongitude,   Bytes.toBytes(data.location.longitude.toString))
+    put.add(cfTime,     colTime,        Bytes.toBytes(transformedTime))
 
     hTable.put(put)
   }
 
-  def init(): Unit = {
+  def init() {
     hbaseConf = HBaseConfiguration.create()
     val tableName = "iot_device_log"
     hbaseConf.set("hbase.mapred.outputtable", tableName)
@@ -52,7 +56,7 @@ class IotDeviceDao {
     createIfNotExist(tableName, admin)
   }
 
-  def close(): Unit = {
+  def close() {
     hTable.close()
   }
 

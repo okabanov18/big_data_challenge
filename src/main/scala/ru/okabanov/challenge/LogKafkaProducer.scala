@@ -5,6 +5,9 @@ import java.util.concurrent.{Future => JFuture}
 
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord, RecordMetadata}
 
+/**
+  * @author okabanov
+  */
 class LogKafkaProducer(kafkaBrokers: String) {
 
   private val producer = createProducer(kafkaBrokers)
