@@ -1,4 +1,4 @@
-# big_data_challenge
+# Big data challenge
 ## Kafka
 ```
 kafka-topics --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic iot-device-log
