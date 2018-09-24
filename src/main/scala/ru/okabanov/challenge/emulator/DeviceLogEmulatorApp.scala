@@ -21,7 +21,6 @@ object DeviceLogEmulator {
   private def readKafkaProps() = {
     val prop = new Properties()
     prop.load(new FileInputStream("spark_application.conf"))
-
     (
       prop.getProperty("spark.iot-log-parser.kafka.brokers"),
       prop.getProperty("spark.iot-log-parser.kafka.input-topic")
