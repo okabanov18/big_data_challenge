@@ -2,8 +2,8 @@ package ru.okabanov.challenge.emulator
 
 import java.util.concurrent.{Executors, TimeUnit}
 
-import ru.okabanov.challenge.utils.SimpleScalaObjectMapper
 import ru.okabanov.challenge.model.{DeviceLocation, DeviceLogData, InputLog}
+import ru.okabanov.challenge.utils.SimpleScalaObjectMapper
 
 class DeviceEmulator(deviceId: String, producer: LogKafkaProducer, topic: String) {
 
@@ -11,7 +11,10 @@ class DeviceEmulator(deviceId: String, producer: LogKafkaProducer, topic: String
   private val scheduler = Executors.newScheduledThreadPool(1)
 
   def start(): Unit = {
-    scheduler.schedule(new Runnable() { def run() = sendLog() }, random.nextInt(100) + 900, TimeUnit.MILLISECONDS)
+    val task = new Runnable() {
+      def run() = sendLog()
+    }
+    scheduler.scheduleAtFixedRate(task, 0, random.nextInt(100) + 900, TimeUnit.MILLISECONDS)
   }
 
   private def sendLog(): Unit = {
