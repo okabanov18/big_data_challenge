@@ -3,7 +3,7 @@ package ru.okabanov.challenge.emulator
 import java.util.concurrent.{Executors, TimeUnit}
 
 import ru.okabanov.challenge.utils.SimpleScalaObjectMapper
-import ru.okabanov.challenge.{DeviceLocation, DeviceLogData, InputLog, LogKafkaProducer}
+import ru.okabanov.challenge.model.{DeviceLocation, DeviceLogData, InputLog}
 
 class DeviceEmulator(deviceId: String, producer: LogKafkaProducer, topic: String) {
 

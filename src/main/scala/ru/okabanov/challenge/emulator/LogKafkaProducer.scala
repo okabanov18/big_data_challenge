@@ -1,4 +1,4 @@
-package ru.okabanov.challenge
+package ru.okabanov.challenge.emulator
 
 import java.util.Properties
 import java.util.concurrent.{Future => JFuture}

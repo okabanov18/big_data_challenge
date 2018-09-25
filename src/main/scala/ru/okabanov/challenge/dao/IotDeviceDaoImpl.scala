@@ -7,7 +7,7 @@ import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hbase.client.{HBaseAdmin, HTable, Put}
 import org.apache.hadoop.hbase.util.Bytes
 import org.apache.hadoop.hbase.{HBaseConfiguration, HColumnDescriptor, HTableDescriptor}
-import ru.okabanov.challenge.DeviceLogData
+import ru.okabanov.challenge.model.DeviceLogData
 
 /**
   * @author okabanov

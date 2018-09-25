@@ -9,13 +9,14 @@ import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods
 import org.json4s.jackson.JsonMethods._
 import ru.okabanov.challenge.dao.IotDeviceDaoImpl
+import ru.okabanov.challenge.model.InputLog
 
 import scala.util.{Failure, Success, Try}
 
 /**
   * @author okabanov
   */
-object IotLogsStreamingProcessing {
+object IotStreamingApp {
   implicit val formats = DefaultFormats
 
   def main(args: Array[String]): Unit = {
@@ -65,13 +66,5 @@ object IotLogsStreamingProcessing {
       "auto.offset.reset" -> "largest",
       "enable.auto.commit" -> "true"
     )
-  }
-
-  private def parseLogs(line: String): Seq[InputLog] = {
-    Try(JsonMethods.parse(line).extract[Seq[InputLog]]) match {
-      case Success(logs) => logs
-      case Failure(e) => //logger.warn(s"error parsing message: $line, error: ${e.getLocalizedMessage}");
-        Seq.empty
-    }
   }
 }

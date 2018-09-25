@@ -2,7 +2,6 @@ package ru.okabanov.challenge.emulator
 
 import java.io.FileInputStream
 import java.util.Properties
-import ru.okabanov.challenge.LogKafkaProducer
 
 /**
   * @author okabanov

@@ -3,7 +3,7 @@
 SCRIPT_HOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 spark-submit \
-  --class "ru.okabanov.challenge.IotLogsStreamingProcessing" \
+  --class "ru.okabanov.challenge.IotStreamingApp" \
   --master "yarn" \
   --properties-file spark_application.conf \
   ${SCRIPT_HOME}/target/challenge-1.0-SNAPSHOT-jar-with-dependencies.jar \

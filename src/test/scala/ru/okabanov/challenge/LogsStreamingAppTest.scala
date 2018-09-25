@@ -1,16 +1,14 @@
 package ru.okabanov.challenge
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import org.apache.spark.SparkConf
 import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.scalatest.FlatSpec
+import ru.okabanov.challenge.model._
 
 import scala.collection.mutable
 
-class IotLogsStreamingProcessingTest extends FlatSpec {
+class LogsStreamingAppTest extends FlatSpec {
 
   val sparkConf = new SparkConf()
     .setMaster("local[*]")
