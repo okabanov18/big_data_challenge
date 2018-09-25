@@ -2,10 +2,11 @@ package ru.okabanov.challenge.emulator
 
 import java.util.concurrent.{Executors, TimeUnit}
 
+import com.typesafe.scalalogging.slf4j.LazyLogging
 import ru.okabanov.challenge.model.{DeviceLocation, DeviceLogData, InputLog}
 import ru.okabanov.challenge.utils.SimpleScalaObjectMapper
 
-class DeviceEmulator(deviceId: String, producer: LogKafkaProducer, topic: String) {
+class DeviceEmulator(deviceId: String, producer: LogKafkaProducer, topic: String) extends LazyLogging {
 
   private lazy val random = scala.util.Random
   private val scheduler = Executors.newScheduledThreadPool(1)
@@ -23,12 +24,12 @@ class DeviceEmulator(deviceId: String, producer: LogKafkaProducer, topic: String
         data = buildEmulatedLog(deviceId))
     ))
     producer.send(data, topic)
+    logger.info(s"Sent log by $deviceId")
   }
 
   override def finalize(): Unit = {
     scheduler.shutdown()
   }
-
 
   private def buildEmulatedLog(deviceId: String) = {
     DeviceLogData(
