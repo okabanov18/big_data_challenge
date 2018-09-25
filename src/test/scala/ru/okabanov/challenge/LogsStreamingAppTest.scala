@@ -2,9 +2,10 @@ package ru.okabanov.challenge
 
 import org.apache.spark.SparkConf
 import org.apache.spark.rdd.RDD
-import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.streaming.{Milliseconds, Seconds, StreamingContext}
 import org.scalatest.FlatSpec
 import ru.okabanov.challenge.model._
+import ru.okabanov.challenge.utils.SimpleScalaObjectMapper
 
 import scala.collection.mutable
 
@@ -14,7 +15,7 @@ class LogsStreamingAppTest extends FlatSpec {
     .setMaster("local[*]")
     .setAppName("spark-streaming-testing")
 
-  val ssc = new StreamingContext(sparkConf, Seconds(1))
+  val ssc = new StreamingContext(sparkConf, Milliseconds(1))
 
   behavior of "Log stream processing"
 
@@ -31,17 +32,14 @@ class LogsStreamingAppTest extends FlatSpec {
       time = 123456789
     )
 
-    // ssc.start()
+    IotStreamingApp.parseInputLogs(ssc.queueStream(rddQueue)).foreachRDD { partition => partition.foreach { data => data} }
 
-//    rddQueue += ssc.sparkContext.parallelize(List(
-//      ("key", mapper.writeValueAsString(Seq(InputLog(deviceLogData))))
-//    ))
+    ssc.start()
 
+    rddQueue += ssc.sparkContext.parallelize(
+      List(("key", SimpleScalaObjectMapper.writeValueAsString(Seq(InputLog(deviceLogData)))))
+    )
 
+    ssc.awaitTerminationOrTimeout(5)
   }
-
-
-
-
-
 }

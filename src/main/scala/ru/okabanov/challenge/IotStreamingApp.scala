@@ -2,13 +2,13 @@ package ru.okabanov.challenge
 
 import kafka.serializer.StringDecoder
 import org.apache.spark.SparkConf
-import org.apache.spark.streaming.dstream.InputDStream
+import org.apache.spark.streaming.dstream.{DStream, InputDStream}
 import org.apache.spark.streaming.kafka.KafkaUtils
 import org.apache.spark.streaming.{Duration, Seconds, StreamingContext}
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods._
 import ru.okabanov.challenge.dao.{IotDeviceDao, IotDeviceDaoImpl}
-import ru.okabanov.challenge.model.InputLog
+import ru.okabanov.challenge.model.{DeviceLogData, InputLog}
 
 /**
   * @author okabanov
@@ -28,22 +28,26 @@ object IotStreamingApp {
       createKafkaParams(options),
       Set(options.kafkaInputTopic)
     )
-    processStream(inputStream)
+    saveToHBase(parseInputLogs(inputStream))
 
     ssc.start()
     ssc.awaitTermination()
   }
 
-  private[challenge] def processStream(inputStream: InputDStream[(String, String)]) = {
+  private def saveToHBase(inputStream: DStream[DeviceLogData]) = {
     inputStream
-      .flatMap { case (id, value) =>
-        implicit val formats = DefaultFormats
-        parse(value).extract[Array[InputLog]].map(_.data)
-      }
       .foreachRDD { rdd =>
         rdd.foreachPartition { partition =>
           getIotDeviceDao.saveBatch(partition.toSeq)
         }
+      }
+  }
+
+  private[challenge] def parseInputLogs(inputStream: InputDStream[(String, String)]): DStream[DeviceLogData] = {
+    inputStream
+      .flatMap { case (id, value) =>
+        implicit val formats = DefaultFormats
+        parse(value).extract[Array[InputLog]].map(_.data)
       }
   }
 

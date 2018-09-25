@@ -1,5 +1,17 @@
 # Big data challenge
+
+## Usage
+- In order to start the emulator: ru.okabanov.challenge.emulator.DeviceLogEmulatorApp.scala
+- For starting spark application use: ./submit_local.sh
+- Impala queries see below
+
+## Improvements:
+- Default spark version (1.6.0) was used from latest Cloudera image. It's old version and need to upgrade it.
+- There are no integration tests with Kafka and HBase.
+- Need to separate project to 3 modules: model, emulator, log-processing. It can reduce jars size for spark application.
+
 ## Kafka
+./create_topics.sh
 ```
 kafka-topics --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic iot-device-log
 ```
