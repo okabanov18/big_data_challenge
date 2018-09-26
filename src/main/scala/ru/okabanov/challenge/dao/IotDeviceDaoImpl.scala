@@ -51,7 +51,7 @@ class IotDeviceDaoImpl extends IotDeviceDao {
     }
   }
 
-  def init(): HTable = {
+  private def init(): HTable = {
     val hbaseConf = HBaseConfiguration.create()
     val tableName = "iot_device_log"
     hbaseConf.set("hbase.mapred.outputtable", tableName)
